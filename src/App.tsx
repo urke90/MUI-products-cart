@@ -1,12 +1,17 @@
 import { Box } from '@mui/system';
-import { useTheme } from '@mui/system';
+import Container from '@mui/material/Container';
+
+import Header from './Layout/Header';
 
 const App: React.FC = () => {
-    const theme = useTheme();
-
-    console.log('theme', theme);
-
-    return <Box color={theme.palette.third.secondary}>THE CODE GOES HERE</Box>;
+    return (
+        <Box>
+            <Header />
+            <Container maxWidth="lg" sx={{ border: '1px solid red' }}>
+                THIS IS CONTAINER FOR REST OF COMPONENTS
+            </Container>
+        </Box>
+    );
 };
 
 export default App;
