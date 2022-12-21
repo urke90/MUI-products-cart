@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import Container from '@mui/material/Container';
 import { useAxios } from './hooks/use-axios';
-import { IBooks } from './ts/books';
+import { IBook } from './ts/books';
 
 import Header from './Layout/Header';
+import BooksGrid from './components/books/BooksGrid';
 
 const App: React.FC = () => {
-    const [books, setBooks] = useState<IBooks[]>([]);
+    const [books, setBooks] = useState<IBook[]>([]);
     const { sendRequest } = useAxios();
 
     useEffect(() => {
@@ -33,7 +34,7 @@ const App: React.FC = () => {
         <Box>
             <Header />
             <Container maxWidth="lg" sx={{ border: '1px solid red' }}>
-                THIS IS CONTAINER FOR REST OF COMPONENTS
+                {books.length > 0 ? <BooksGrid books={books} /> : null}
             </Container>
         </Box>
     );
