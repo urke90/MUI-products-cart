@@ -10,8 +10,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LocalGroceryStoreRoundedIcon from '@mui/icons-material/LocalGroceryStoreRounded';
 import BookIcon from '@mui/icons-material/Book';
 
-import React from 'react';
-
 interface INavMenuProps {}
 
 const NavMenu: React.FC<INavMenuProps> = () => {
