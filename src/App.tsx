@@ -33,8 +33,10 @@ const App: React.FC = () => {
     return (
         <Box>
             <Header />
-            <Container maxWidth="lg" sx={{ border: '1px solid red' }}>
-                {books.length > 0 ? <BooksGrid books={books} /> : null}
+            <Container maxWidth="lg">
+                <Box>
+                    {books.length > 0 ? <BooksGrid books={books} /> : null}
+                </Box>
             </Container>
         </Box>
     );
