@@ -10,6 +10,12 @@ interface IUseAxios<T> {
     handleManualRequest: () => Promise<void>;
 }
 
+/**
+ *
+ * * IMPROVE HOOK SO IT CAN RECEIVE DATA IF REQ IS POST/PUT
+ * * ADD ABORT CONTROLLER ( TO CANCENCEL REQ IS COMP IS UNMOUNTED OR SIMMILAR )
+ */
+
 export const useAxios = <T>(
     config: AxiosRequestConfig,
     loadOnStart: boolean
@@ -55,4 +61,3 @@ export const useAxios = <T>(
         data
     };
 };
-//: Promise<AxiosResponse<any, any> | undefined>
