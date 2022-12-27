@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -17,41 +17,23 @@ interface IBooksGridProps {}
  */
 
 const BooksGrid: React.FC<IBooksGridProps> = () => {
-    // const [books, setBooks] = useState<IBook[]>([]);
+    const [cart, setCart] = useState<IBook[]>([]);
     const {
         data: books,
         isLoading,
         error
     } = useAxios<IBook[]>({ url: 'books.json', method: 'GET' }, true);
 
-    // console.log('books', books);
+    const addBookToCart = (book: IBook) => {
+        console.log('book', book);
+        if (book) {
+            setCart((prevCart) => [...prevCart, book]);
+        }
+    };
 
-    // useMemo(() => {
-    //     console.log('opalio useMemo');
-    //     const fetchBooks = async () => {
-    //         const response = await sendRequest({
-    //             url: 'books.json',
-    //             method: 'GET'
-    //         });
-
-    //         if (response?.status === 200 && response.data.length > 0) {
-    //             const modifiedBooks: IBook[] = response.data.reduce(
-    //                 (acc: IBook[], nextBook: IBook, index: number) => {
-    //                     const updatedBook = {
-    //                         ...nextBook,
-    //                         id: index + 1
-    //                     };
-
-    //                     return [...acc, updatedBook];
-    //                 },
-    //                 []
-    //             );
-
-    //             setBooks(modifiedBooks);
-    //         }
-    //     };
-    //     fetchBooks();
-    // }, []);
+    useEffect(() => {
+        console.log('cart ITEMS', cart);
+    }, [cart]);
 
     if (isLoading) {
         return <LoadingSpinner asOverlay />;
@@ -80,8 +62,9 @@ const BooksGrid: React.FC<IBooksGridProps> = () => {
                 {books && books.length > 0
                     ? books.map((book) => (
                           <BooksGridItem
-                              key={book.link + book.imageLink}
+                              key={book.id}
                               book={book}
+                              onAddBookToCart={addBookToCart}
                           />
                       ))
                     : null}
@@ -89,23 +72,5 @@ const BooksGrid: React.FC<IBooksGridProps> = () => {
         </Box>
     );
 };
+
 export default BooksGrid;
-
-/**
- * const Component = () => {
-   useMemo(() => {
-     // componentWillMount events
-   },[]);
-   useEffect(() => {
-     // componentDidMount events
-     return () => {
-       // componentWillUnmount events
-     }
-   }, []);
-};
-
-
-You would need to keep the useMemo hook before anything that interacts with your state. This is not how it is intended but it worked for me for all componentWillMount issues.
-
-This works because useMemo doesnt require to actually return a value and you dont have to actually use it as anything, but since it memorizes a value based on dependencies which will only run once ("[]") and its on top of our component it runs once when the component mounts before anything else.
- */

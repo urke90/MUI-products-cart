@@ -14,13 +14,42 @@ import { IBook } from '../../ts/books';
 
 interface IBooksGridItemProps {
     book: IBook;
+    onAddBookToCart: (data: IBook) => void;
 }
 
-const BooksGridItem: React.FC<IBooksGridItemProps> = ({ book }) => {
-    const { author, title, link, year, pages, id } = book;
+const BooksGridItem: React.FC<IBooksGridItemProps> = ({
+    book,
+    onAddBookToCart
+}) => {
+    const {
+        author,
+        title,
+        link,
+        year,
+        pages,
+        id,
+        country,
+        language,
+        imageLink
+    } = book;
 
     // console.log('book', book);
-    // console.log('bookImg', bookImg);
+
+    const handleAddToCart = () => {
+        const data: IBook = {
+            id,
+            author,
+            country,
+            title,
+            link,
+            year,
+            pages,
+            imageLink,
+            language
+        };
+
+        onAddBookToCart(data);
+    };
 
     const authorName =
         author === 'Unknown' ? "Couldn't find authors name" : author;
@@ -61,6 +90,7 @@ const BooksGridItem: React.FC<IBooksGridItemProps> = ({ book }) => {
                         variant="contained"
                         size="small"
                         startIcon={<LocalGroceryStoreRoundedIcon />}
+                        onClick={handleAddToCart}
                     >
                         Add To Cart
                     </Button>
