@@ -1,43 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { useAxios } from '../../hooks/use-axios';
 import { IBook } from '../../ts/books';
+import { IAuthor } from '../../ts/authors';
 
 import BooksGridItem from './BooksGridItem';
+import SelectCustom from '../../common/form/SelectCustom';
+import Header from '../../layout/Header';
 import LoadingSpinner from '../../common/ui/LoadingSpinner';
 
 interface IBooksGridProps {}
 
-/**
- *
- * * LEFT COMMENTED CODE TO BE REVIEWED
- */
-
 const BooksGrid: React.FC<IBooksGridProps> = () => {
-    const [cart, setCart] = useState<IBook[]>([]);
+    const [selectedAuthor, setSelectedAuthor] = useState('all');
     const {
-        data: books,
+        data: books = [],
         isLoading,
         error
     } = useAxios<IBook[]>({ url: 'books.json', method: 'GET' }, true);
+    console.log('books after hook', books);
+
+    const authors: IAuthor[] = useMemo(() => {
+        const mappedAuthors = books.map((book) => ({
+            id: book.id,
+            author: book.author
+        }));
+        return [...new Map(mappedAuthors.map((a) => [a.author, a])).values()];
+    }, [books]);
 
     const addBookToCart = (book: IBook) => {
-        console.log('book', book);
         if (book) {
-            setCart((prevCart) => [...prevCart, book]);
+            // setCart((prevCart) => [...prevCart, book]);
         }
     };
 
-    useEffect(() => {
-        console.log('cart ITEMS', cart);
-    }, [cart]);
+    const handleAuthorChange = (event: SelectChangeEvent<unknown>) => {
+        setSelectedAuthor(event.target.value as string);
+    };
 
     if (isLoading) {
         return <LoadingSpinner asOverlay />;
-    } else if (error) {
+    } else if (!isLoading && error) {
         return (
             <Box sx={{ py: 3 }}>
                 <Typography variant="h2" align="center" gutterBottom>
@@ -45,19 +52,33 @@ const BooksGrid: React.FC<IBooksGridProps> = () => {
                 </Typography>
             </Box>
         );
-    } else if (!isLoading && !error && books?.length === 0) {
-        return (
-            <Typography variant="h2" align="center" gutterBottom>
-                There are no books to display
-            </Typography>
-        );
     }
 
     return (
         <Box sx={{ py: 3 }}>
+            <Header />
             <Typography variant="h2" align="center" gutterBottom>
                 Books
             </Typography>
+            <Box
+                sx={{
+                    py: 2,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: '20px'
+                }}
+                className="WRAPPER BOX ELEMENT "
+            >
+                <Box sx={{ flex: 1 }}>
+                    <SelectCustom
+                        items={authors}
+                        onChange={handleAuthorChange}
+                        selectedAuthor={selectedAuthor}
+                    />
+                </Box>
+                <Box sx={{ flex: 1 }}>INPUT SEARCH HERE</Box>
+            </Box>
             <Grid container spacing={3}>
                 {books && books.length > 0
                     ? books.map((book) => (
