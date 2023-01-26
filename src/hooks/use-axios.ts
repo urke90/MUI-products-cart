@@ -7,30 +7,23 @@ interface IUseAxios<T> {
     error: AxiosError<unknown, any> | undefined;
     handleClearError: () => void;
     data: T | undefined;
-    handleManualRequest: () => Promise<void>;
 }
-
-/**
- *
- * * IMPROVE HOOK SO IT CAN RECEIVE DATA IF REQ IS POST/PUT
- * * ADD ABORT CONTROLLER ( TO CANCENCEL REQ IS COMP IS UNMOUNTED OR SIMMILAR )
- */
 
 export const useAxios = <T>(
     config: AxiosRequestConfig,
     loadOnStart: boolean
 ): IUseAxios<T> => {
-    const [isLoading, setIsLoading] = useState(false);
+    console.log('useAxios hook begin');
+
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<AxiosError<unknown, any> | undefined>();
     const [data, setData] = useState<T>();
 
-    const sendRequest = async (): Promise<void> => {
+    const sendRequest = useCallback(async (): Promise<void> => {
         try {
-            setIsLoading(true);
-
+            // setIsLoading(true);
             const response = await axios.request(config);
             setData(response.data);
-            setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             const err = error as AxiosError;
@@ -39,25 +32,22 @@ export const useAxios = <T>(
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [config]);
 
     useEffect(() => {
-        console.log('oplio useEffect u useAxios');
+        if (loadOnStart) {
+            console.log('useEffect u CUSTOM HOOKU');
 
-        if (loadOnStart) sendRequest();
-    }, []);
-
-    const handleManualRequest = useCallback(async () => {
-        await sendRequest();
-    }, []);
+            sendRequest();
+        }
+    }, [loadOnStart, sendRequest]);
 
     const handleClearError = useCallback(() => setError(undefined), []);
 
     return {
         isLoading,
         error,
-        handleManualRequest,
-        handleClearError,
-        data
+        data,
+        handleClearError
     };
 };
