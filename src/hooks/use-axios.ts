@@ -32,7 +32,7 @@ export const useAxios = <T>(
         } finally {
             setIsLoading(false);
         }
-    }, [config]);
+    }, []);
 
     useEffect(() => {
         if (loadOnStart) {

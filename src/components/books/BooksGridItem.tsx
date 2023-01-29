@@ -58,7 +58,7 @@ const BooksGridItem: React.FC<IBooksGridItemProps> = ({
         <Grid item xs={12} sm={6} lg={3}>
             <Card elevation={2} sx={{ p: 2 }}>
                 <Typography gutterBottom variant="h5" align="center" noWrap>
-                    Author: {authorName}
+                    {authorName}
                 </Typography>
                 <Link href={link}>
                     <CardMedia
